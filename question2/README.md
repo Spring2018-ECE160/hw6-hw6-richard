@@ -1,4 +1,4 @@
-## Question 1
+## Question 2 ######(there was a typo, but I fixed it =)
 (K&R Exercise 5-13) Write the program <code>tail</code>, which prints the last n lines of its input. By default, n is 10, let us say, but it can be changed by an optional argument, so that
 
 <code>    tail -n</code>
@@ -7,4 +7,10 @@ prints the last n lines. The program should behave rationally no matter how unre
 
 Compile Steps: 
 
+	gcc q2.c -o out2
+	./out2 -n 2 < hi
+
 Output:
+
+	4Hi professor Hong!
+	5My tail program works!
