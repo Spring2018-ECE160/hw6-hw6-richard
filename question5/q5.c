@@ -10,7 +10,8 @@
 #define MAXLEN 100000
 #define MAXLINE 100000
 
-//int loadData(*ptr_data, input);
+//the following line causes errors for some reason...
+//int loadData(struct EQinfo ptr_data[], FILE *input);
 
 struct EQinfo {
 
@@ -25,100 +26,63 @@ struct EQinfo {
 
 int main()  {
 	struct EQinfo tenyears[200];
-	struct EQinfo *ptr_data = &tenyears
+	struct EQinfo *ptr_data = &tenyears;
 	FILE *input = fopen(FPATH, "r");
-//	loadData(*ptr_data, input);
+	loadData(tenyears, input);
 	char str[MAXLEN];
 	char *temp;
-	int i = 0;
 
-	while(fgets(str, sizeof(str), input)){
-        //load datetime
-        temp = strtok(str, ",");
-        tenyears[i].time = strdup(temp);
-
-		//load latitude
-		temp = strtok(NULL, ",");
-        tenyears[i].latitude = atof(temp);
-
-		//load longitude
-		temp = strtok(NULL, ",");
-        tenyears[i].longitude = atof(temp);
-
-		//load depth
-		temp = strtok(NULL, ",");
-        tenyears[i].depth = atof(temp);
-
-		//load magnitude
-		temp = strtok(NULL, ",");
-        tenyears[i].magnitude = atof(temp);
-
-		//load number of stations
-		temp = strtok(NULL, ","); //skip magType
-		temp = strtok(NULL, ",");
-        tenyears[i].numStations = atoi(temp);
-
-		for(int i = 0; i < 5; i++) { //skip next 5 things
-			temp = strtok(NULL, ",");
-		}
-
-		temp = strtok(NULL, ",");
-        tenyears[i].place = strdup(temp);
-
-		//load the rest into value, but toss it
-		temp = strtok(NULL, " \n");
-
-		i++;
-	}
-
-//	printf("%s\n", tenyears[0].place);
+	printf("%s\n", tenyears[0].place);
 
 	return 0;
 }
-/*
-int loadData(*ptr_data, input) {
+
+int loadData(struct EQinfo ptr_data[], FILE *input) {
 	char str[MAXLEN];
 	char *temp;
 	int i = 0;
+	int numlines = 0;
 	while(fgets(str, sizeof(str), input)){
         //load datetime
         temp = strtok(str, ",");
-        tenyears[i].time = strdup(temp);
+        ptr_data[i].time = strdup(temp);
 
 		//load latitude
 		temp = strtok(NULL, ",");
-        tenyears[i].latitude = atof(temp);
+        ptr_data[i].latitude = atof(temp);
 
 		//load longitude
 		temp = strtok(NULL, ",");
-        tenyears[i].longitude = atof(temp);
+        ptr_data[i].longitude = atof(temp);
 
 		//load depth
 		temp = strtok(NULL, ",");
-        tenyears[i].depth = atof(temp);
+        ptr_data[i].depth = atof(temp);
 
 		//load magnitude
 		temp = strtok(NULL, ",");
-        tenyears[i].magnitude = atof(temp);
+        ptr_data[i].magnitude = atof(temp);
 
 		//load number of stations
 		temp = strtok(NULL, ","); //skip magType
 		temp = strtok(NULL, ",");
-        tenyears[i].numStations = atoi(temp);
+        ptr_data[i].numStations = atoi(temp);
 
 		for(int i = 0; i < 5; i++) { //skip next 5 things
 			temp = strtok(NULL, ",");
 		}
 
 		temp = strtok(NULL, ",");
-        tenyears[i].place = strdup(temp);
+        ptr_data[i].place = strdup(temp);
 
 		//load the rest into value, but toss it
 		temp = strtok(NULL, " \n");
 
 		i++;
 	}
+	numlines = i;
+	return numlines;
 }
-*/
+
 
 
