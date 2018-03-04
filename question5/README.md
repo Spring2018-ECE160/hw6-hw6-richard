@@ -10,4 +10,27 @@ Bonus (+5 points): Find an actual data file that you ingest with your program us
 
 Compile Steps:
 
+	gcc q5.c -o out5
+
 Output:
+
+	Data on Magnitude 7 and larger earthquakes for the past 10 years: 
+	
+	The Largest Earthquake(s) were: 
+		9.100000 located in near the east coast of Honshu: Japan on 2011-03-11T05:46:24.120Z UTC
+	
+	The number of Magnitude 7 and larger earthquakes in/on the: 
+		Northern, Western hemisphere: 23
+		Northern, Eastern hemisphere: 51
+		Southern, Western hemisphere: 35
+		Southern, Eastern hemisphere: 56
+		Equator: 0
+		Prime Meridian: 0
+		International Date Line: 0
+	
+	Average Depth of these earthquakes: 97.790648
+	
+	Average Number of Stations that detect these earthquakes: 300.703030
+
+
+
