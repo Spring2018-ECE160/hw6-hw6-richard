@@ -10,4 +10,10 @@ Provide and print out 3 examples to show that your function is working as intend
 
 Compile Steps: 
 
+	gcc q1.c -o out1
+
 Output:
+
+	Min value: 1, Max Value: 3
+	Min value: 2, Max Value: 5
+	Min value: 2, Max Value: 3
