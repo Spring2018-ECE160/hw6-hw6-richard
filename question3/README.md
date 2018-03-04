@@ -7,7 +7,7 @@ Also, add the option -f to fold upper and lower case together, so that case dist
 Compile Steps:
 
 	gcc q3.c -o out3
-	./out3 `< hi`
+	./out3 < hi
 
 Output (no flags):
 
