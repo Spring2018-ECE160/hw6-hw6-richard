@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-//for some reason including stdlib to get rid of the compiler
-//warnin for atof causes my data to be wrong.
+#include <stdlib.h>
 
 //165 events in past 10 years
 #define NUMEVENTS 200
@@ -9,9 +8,6 @@
 #define FPATH "./data.csv"
 #define MAXLEN 100000
 #define MAXLINE 100000
-
-//the following line causes errors for some reason...
-//int loadData(struct EQinfo ptr_data[], FILE *input);
 
 struct EQinfo {
 
@@ -24,17 +20,109 @@ struct EQinfo {
 	char *place;
 };
 
+int loadData(struct EQinfo ptr_data[], FILE *input);
+int maxEQ(struct EQinfo ptr_data[], int numlines);
+int hemiCalc(struct EQinfo ptr_data[], int numlines);
+double averageDepth(struct EQinfo ptr_data[], int numlines);
+double averageNST(struct EQinfo ptr_data[], int numlines);
+
+
 int main()  {
 	struct EQinfo tenyears[200];
-	struct EQinfo *ptr_data = &tenyears;
 	FILE *input = fopen(FPATH, "r");
-	loadData(tenyears, input);
-	char str[MAXLEN];
-	char *temp;
-
-	printf("%s\n", tenyears[0].place);
-
+	int numlines = loadData(tenyears, input);
+	printf("Data on Magnitude 7 and larger earthquakes for the past 10 years: \n\n");
+	maxEQ(tenyears, numlines);
+	printf("\n");
+	hemiCalc(tenyears, numlines);
+	printf("\n");
+	double avgDepth = averageDepth(tenyears, numlines); //function with a return value, just for variety
+	printf("Average Depth of these earthquakes: %f\n\n", avgDepth);
+	double avgNST = averageNST(tenyears, numlines); //function with a return value, just for variety
+	printf("Average Number of Stations that detect these earthquakes: %f\n", avgNST);
+	fclose(input);
 	return 0;
+}
+
+int maxEQ(struct EQinfo ptr_data[], int numlines) {
+	double max = 0;
+	int maxplace = 0;
+	int maxloc[numlines];
+	int numMax = 0;
+	for(int i = 0; i < numlines; i++) {
+		if(ptr_data[i].magnitude > max) {
+			max = ptr_data[i].magnitude;
+			maxplace = i;
+		}
+		else if(ptr_data[i].magnitude == max) {
+			maxloc[numMax] = i;
+			numMax++;
+		}
+	}
+	printf("The Largest Earthquake(s) were: \n");
+	printf("\t%f located in %s on %s UTC\n", max, ptr_data[maxplace].place, ptr_data[maxplace].time);	
+	if(numMax > 0) {
+		for(int i = 0; i < numMax; i++) {
+			 printf("\t%f located in %s on %s UTC\n", max, ptr_data[maxloc[i]].place, ptr_data[maxloc[i]].time);
+		}
+//		printf("\n");
+	}
+	//else {
+		
+	//}
+}
+
+int hemiCalc(struct EQinfo ptr_data[], int numlines) {
+	int northeast = 0, northwest = 0, southeast = 0, southwest = 0, equator = 0, pmeridian = 0, idl = 0;
+	for(int i = 0; i < numlines; i++) {
+		if(ptr_data[i].latitude > 0 && ptr_data[i].longitude > 0) {
+			northeast++;
+		}
+		else if(ptr_data[i].latitude > 0 && ptr_data[i].longitude < 0) {
+			northwest++;
+		}
+		else if(ptr_data[i].latitude < 0 && ptr_data[i].longitude > 0) {
+			southeast++;
+		}
+		else if(ptr_data[i].latitude < 0 && ptr_data[i].longitude < 0) {
+			southwest++;
+		}		
+		else if(ptr_data[i].latitude = 0) {
+			equator++;
+		}
+		else if(ptr_data[i].longitude = 0) {
+			pmeridian++;
+		}
+		else if(ptr_data[i].longitude = 180) {
+			idl++;
+		}	
+	}
+	printf("The number of Magnitude 7 and larger earthquakes in/on the: \n");
+	printf("\tNorthern, Western hemisphere: %d\n", northwest);
+	printf("\tNorthern, Eastern hemisphere: %d\n", northeast);
+	printf("\tSouthern, Western hemisphere: %d\n", southwest);
+	printf("\tSouthern, Eastern hemisphere: %d\n", southeast);
+	printf("\tEquator: %d\n", equator);
+	printf("\tPrime Meridian: %d\n", pmeridian);
+	printf("\tInternational Date Line: %d\n", idl);
+}
+
+double averageDepth(struct EQinfo ptr_data[], int numlines) {
+	double avgDepth = 0;	
+	for(int i = 0; i < numlines; i++) {
+		avgDepth += ptr_data[i].depth;
+	}
+	avgDepth /= (double)numlines;
+	return avgDepth;
+}
+
+double averageNST(struct EQinfo ptr_data[], int numlines) {
+	double avgNST = 0;	
+	for(int i = 0; i < numlines; i++) {
+		avgNST += ptr_data[i].numStations;
+	}
+	avgNST /= (double)numlines;
+	return avgNST;
 }
 
 int loadData(struct EQinfo ptr_data[], FILE *input) {
