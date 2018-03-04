@@ -14,6 +14,7 @@ static char *allocp = allocbuf;  // next free position
 
 // functions
 int numcmp(char *s1, char *s2);
+int strcmpFold(char *s1, char *s2);
 int readlines(char *lineptr[], int nlines);
 void writelines(char *lineptr[], int nlines);
 void qsort(void *lineptr[], int left, int right, 
@@ -45,14 +46,15 @@ int main(int argc, char *argv[]) {
 				else
 					printf ("Unknown option character %x\n",optopt);
 			default:
-				printf("USAGE: %s -n [numlines]\n", argv[0]);		
+				printf("USAGE: %s -n [numlines]\n", argv[0]);
+				return 1;
 		}
 	}
     if ((nlines = readlines(lineptr, MAXLINES)) >= 0) {	
 		printf("INPUT:\n");
 		writelines(lineptr, nlines);
         qsort((void **) lineptr, 0, nlines-1,
-          (int (*)(void*, void*))(numeric ? numcmp : strcmp));
+          (int (*)(void*, void*))(numeric ? numcmp : (fold ? strcmpFold : strcmp)));
 		if(reverse == 1) {
 			for(int i = 0, j = nlines - 1; i < nlines/2 && j > 0; i++, j--) {
 				swap(lineptr, i, j);
@@ -167,8 +169,7 @@ void swap(void *v[], int i, int j)
 
 
 // writelines: write output lines
-void writelines(char *lineptr[], int nlines)
-{
+void writelines(char *lineptr[], int nlines) {
     int i;
     for (i = 0; i < nlines; i++)
         printf("%s\n", lineptr[i]);
@@ -176,8 +177,7 @@ void writelines(char *lineptr[], int nlines)
 
 // compare s1 and s2 numerically
 /* numcmp: compare s1 and s2 numerically */
-int numcmp(char *s1, char *s2)
-{
+int numcmp(char *s1, char *s2) {
     double v1, v2;
 
     v1 = atof(s1);
@@ -188,4 +188,14 @@ int numcmp(char *s1, char *s2)
         return 1;
     else
         return 0;
+}
+
+int strcmpFold(char *s1, char *s2) {
+    while(toupper(*s1) == toupper(*s2)) {
+        if (*s1 == '\0') {
+            return 0;
+		}
+		s1++, s2++;
+	}
+    return toupper(*s1) - toupper(*s2);
 }
