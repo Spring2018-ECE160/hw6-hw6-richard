@@ -9,6 +9,7 @@ Compile Steps:
 	gcc q4.c -o out4
 
 Output:
+
 	Enter values for a, b and c in the form a,b,c. No spaces:1,1,0
 	Pt #1 is (-5, 20)
 	Pt #2 is (-4, 12)
