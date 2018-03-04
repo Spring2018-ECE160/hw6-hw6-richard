@@ -22,13 +22,13 @@ Output (no flags):
 	Hi
 	My program works!
 		lowercase
-		spaces in front
+	  spaces in front
 			tab in front
 	
 	OUTPUT:
 			tab in front
 		lowercase
-		spaces in front
+	  spaces in front
 	Hello all
 	Hi
 	Hi professor Hong!
